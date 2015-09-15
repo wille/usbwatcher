@@ -78,11 +78,12 @@ void iterate() {
 		case DRIVE_UNKNOWN:
 		case DRIVE_REMOVABLE:
 		case DRIVE_CDROM:
-		case DRIVE_RAMDISK:
+		case DRIVE_RAMDISK: {
 			mount m;
 			m.name = string(temp);
 			m.type = type;
 			break;
+		}
 		default:
 			cout << "Skipping drive " << temp << endl;
 		}
