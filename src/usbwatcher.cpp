@@ -27,7 +27,7 @@ void sleep();
 
 int main(int argc, char* argv[]) {
 
-	for (;;) {
+	while (true) {
 		sleep();
 		iterate();
 	}
