@@ -2,7 +2,9 @@
 
 #ifdef _WIN32
 #	include <windows.h>
-#elif defined(__linux__)
+#elif defined(__APPLE__)
+
+#else
 #   include <fstream>
 #	include <unistd.h>
 #endif
@@ -65,11 +67,11 @@ void iterate() {
 	}
 
 #elif defined(__linux__)
-	ifstream mountInfo("/proc/mounts");
+	ifstream file("/proc/mounts");
 
-	while (!mountInfo.eof()) {
+	while (!file.eof()) {
 		mount mount;
-		mountInfo >> mount.device >> mount.destination >> mount.fstype >> mount.options >> mount.dump >> mount.pass;
+		file >> mount.device >> mount.destination >> mount.fstype >> mount.options >> mount.dump >> mount.pass;
 		if (!mount.device.empty()) {
 			cout << mount.fstype << " device \"" << mount.device << "\", mounted on \"" << mount.destination << "\". Options: " << mount.options << ". Dump:" << mount.dump << " Pass:" << mount.pass << endl;
 		}
