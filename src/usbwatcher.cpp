@@ -18,6 +18,10 @@ struct mount {
 #ifdef _WIN32
 	string name;
 	int type;
+
+	bool operator==(const mount& m) {
+		return name == m.name && type == m.type;
+	}
 #elif defined(__APPLE__)
 
 #else
@@ -27,13 +31,24 @@ struct mount {
 	string options;
 	int dump;
 	int pass;
+
+	bool operator==(const mount& m) {
+		return device == m.device && destination == m.destination
+				&& fstype == m.fstype && options == m.options
+				&& dump == m.dump && pass == m.pass;
+	}
 #endif
+
+	bool operator!=(const mount& m) {
+		return !this->operator==(m);
+	}
 };
 
 static vector<mount> previous;
 
 void iterate();
 void sleep();
+bool compare(vector<mount>);
 
 int main(int argc, char* argv[]) {
 	while (true) {
@@ -94,4 +109,14 @@ void sleep() {
 #else
 	usleep(DELAY * 1000);
 #endif
+}
+
+bool compare(vector<mount> n) {
+	for (unsigned int i = 0; i < n.size(); i++) {
+		if (previous.at(i) != n[i]) {
+
+		}
+	}
+
+	return false;
 }
