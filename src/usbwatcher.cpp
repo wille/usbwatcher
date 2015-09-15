@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 
 #ifdef _WIN32
 #	include <windows.h>
@@ -14,24 +15,31 @@
 using namespace std;
 
 struct mount {
+#ifdef _WIN32
+	string name;
+	int type;
+#elif defined(__APPLE__)
+
+#else
 	string device;
 	string destination;
 	string fstype;
 	string options;
 	int dump;
 	int pass;
+#endif
 };
+
+static vector<mount> previous;
 
 void iterate();
 void sleep();
 
 int main(int argc, char* argv[]) {
-
 	while (true) {
 		sleep();
 		iterate();
 	}
-
 }
 
 void iterate() {
