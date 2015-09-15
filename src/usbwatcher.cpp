@@ -48,7 +48,8 @@ static vector<mount> previous;
 
 void iterate();
 void sleep();
-bool compare(vector<mount>);
+bool compare(vector<mount>&);
+void trigger();
 
 int main(int argc, char* argv[]) {
 	while (true) {
@@ -59,6 +60,8 @@ int main(int argc, char* argv[]) {
 }
 
 void iterate() {
+	vector<mount> vec;
+
 #ifdef _WIN32
 	const int buflen = 256;
 	char buffer[buflen];
@@ -83,6 +86,8 @@ void iterate() {
 			mount m;
 			m.name = string(temp);
 			m.type = type;
+
+			vec.push_back(m);
 			break;
 		}
 		default:
@@ -103,6 +108,8 @@ void iterate() {
 		}
 	}
 #endif
+
+	compare(vec);
 }
 
 void sleep() {
@@ -113,12 +120,20 @@ void sleep() {
 #endif
 }
 
-bool compare(vector<mount> n) {
-	for (unsigned int i = 0; i < n.size(); i++) {
+bool compare(vector<mount>& n) {
+	for (unsigned int i = 0; i < n.size() && i < previous.size(); i++) {
 		if (previous.at(i) != n[i]) {
-
+			cout << "Not matching at index " << i << endl;
+			trigger();
 		}
 	}
 
+	previous = n;
+
 	return false;
+}
+
+void trigger() {
+	cout << "TRIGGERED! Exiting...";
+	exit(0);
 }
