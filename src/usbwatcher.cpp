@@ -48,8 +48,7 @@ static vector<mount> previous;
 
 void iterate();
 void sleep();
-bool compare(vector<mount>&);
-void trigger();
+void compare(vector<mount>&);
 void trigger(string);
 
 int main(int argc, char* argv[]) {
@@ -121,17 +120,28 @@ void sleep() {
 #endif
 }
 
-bool compare(vector<mount>& n) {
-	for (unsigned int i = 0; i < n.size() && i < previous.size(); i++) {
-		if (previous.at(i) != n[i]) {
-			cout << "Not matching at index " << i << endl;
-			trigger();
+void compare(vector<mount>& n) {
+	for (unsigned int i = 0; i < n.size(); i++) {
+		mount& current = n[i];
+		bool exists = false;
+
+		for (unsigned int l = 0; l < previous.size(); l++) {
+			mount& prev = previous[l];
+
+			if (prev == current) {
+				exists = true;
+				break;
+			}
+		}
+
+		if (!exists) {
+			trigger(current.name + " was not here before");
 		}
 	}
 
 	previous = n;
 
-	return false;
+	return;
 }
 
 void trigger(string reason) {
