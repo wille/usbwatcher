@@ -59,15 +59,16 @@ void iterate() {
 	while (*temp) {
 		int type = GetDriveType(temp);
 
-		if (type == DRIVE_UNKNOWN) {
-			printf("%s : Unknown Drive type\n", temp);
-		} else if (type == DRIVE_REMOVABLE) {
-			printf("%s : Removable Drive\n", temp);
-		} else if (type == DRIVE_CDROM) {
-			printf("%s : CD-Rom/DVD-Rom\n", temp);
-		} else if (type == DRIVE_RAMDISK) {
-			printf("%s : Ram Drive\n", temp);
-		} else {
+		switch (type) {
+		case DRIVE_UNKNOWN:
+		case DRIVE_REMOVABLE:
+		case DRIVE_CDROM:
+		case DRIVE_RAMDISK:
+			mount m;
+			m.name = string(temp);
+			m.type = type;
+			break;
+		default:
 			cout << "Skipping drive " << temp << endl;
 		}
 
