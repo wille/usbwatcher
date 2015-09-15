@@ -50,6 +50,7 @@ void iterate();
 void sleep();
 bool compare(vector<mount>&);
 void trigger();
+void trigger(string);
 
 int main(int argc, char* argv[]) {
 	while (true) {
@@ -133,7 +134,7 @@ bool compare(vector<mount>& n) {
 	return false;
 }
 
-void trigger() {
-	cout << "TRIGGERED! Exiting...";
+void trigger(string reason) {
+	cout << "TRIGGERED: " << reason << ". Exiting...";
 	exit(0);
 }
