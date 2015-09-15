@@ -92,7 +92,7 @@ void iterate() {
 			break;
 		}
 		default:
-			cout << "Skipping drive " << temp << endl;
+			break;
 		}
 
 		temp += lstrlen(temp) + 1;
