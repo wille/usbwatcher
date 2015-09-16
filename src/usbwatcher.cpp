@@ -12,8 +12,9 @@
 
 #define CONFIG_FILE "usbwatcher.conf"
 #define DELAY 1000
+
+#define CFG_INTERVAL "interval:"
 #define CFG_EXEC "execute:"
-#define CFG_TRIGGER "trigger:"
 
 using namespace std;
 
@@ -50,6 +51,7 @@ struct mount {
 static vector<mount> previous;
 static vector<string> triggers;
 static vector<string> commands;
+static int interval = DELAY;
 
 void iterate();
 void sleep();
@@ -75,10 +77,10 @@ void load_config() {
 			string file = s.substr(strlen(CFG_EXEC));
 
 			commands.push_back(file);
-		} else if (s.substr(0, strlen(CFG_TRIGGER)) == CFG_TRIGGER) {
-			string file = s.substr(strlen(CFG_TRIGGER));
+		} else if (s.substr(0, strlen(CFG_INTERVAL)) == CFG_INTERVAL) {
+			string i = s.substr(strlen(CFG_INTERVAL));
 
-			triggers.push_back(file);
+			interval = atoi(i.c_str());
 		}
 	}
 }
@@ -138,9 +140,9 @@ void iterate() {
 
 void sleep() {
 #ifdef _WIN32
-	Sleep(DELAY);
+	Sleep(interval);
 #else
-	usleep(DELAY * 1000);
+	usleep(interval * 1000);
 #endif
 }
 

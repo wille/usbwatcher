@@ -1,1 +1,1 @@
-touch triggered
+echo "Shutting down..."
