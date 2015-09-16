@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <cstdlib>
 
 #ifdef _WIN32
 #	include <windows.h>
@@ -49,7 +50,6 @@ struct mount {
 };
 
 static vector<mount> previous;
-static vector<string> triggers;
 static vector<string> commands;
 static int interval = DELAY;
 
@@ -171,6 +171,15 @@ void compare(vector<mount>& n) {
 }
 
 void trigger(string reason) {
-	cout << "TRIGGERED: " << reason << ". Exiting...";
+	cout << "TRIGGERED: " << reason << ". Exiting..." << endl;
+
+	for (unsigned int i = 0; i < commands.size(); i++) {
+		string s = commands[i];
+
+		cout << "Executing " << s << endl;
+
+		system(s.c_str());
+	}
+
 	exit(0);
 }
