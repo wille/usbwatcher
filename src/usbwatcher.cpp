@@ -1,16 +1,18 @@
 #include <iostream>
 #include <vector>
+#include <fstream>
 
 #ifdef _WIN32
 #	include <windows.h>
 #elif defined(__APPLE__)
 
 #else
-#	include <fstream>
 #	include <unistd.h>
 #endif
 
 #define DELAY 1000
+#define CFG_EXEC "execute:"
+#define CFG_TRIGGER "trigger:"
 
 using namespace std;
 
@@ -45,16 +47,38 @@ struct mount {
 };
 
 static vector<mount> previous;
+static vector<string> triggers;
+static vector<string> commands;
 
 void iterate();
 void sleep();
 void compare(vector<mount>&);
 void trigger(string);
+void load_config();
 
 int main(int argc, char* argv[]) {
+	load_config();
+
 	while (true) {
 		sleep();
 		iterate();
+	}
+}
+
+void load_config() {
+	ifstream config("usbwatcher.conf");
+	string s;
+
+	while (getline(config, s)) {
+		if (s.substr(0, strlen(CFG_EXEC)) == CFG_EXEC) {
+			string file = s.substr(strlen(CFG_EXEC));
+
+			commands.push_back(file);
+		} else if (s.substr(0, strlen(CFG_TRIGGER)) == CFG_TRIGGER) {
+			string file = s.substr(strlen(CFG_TRIGGER));
+
+			triggers.push_back(file);
+		}
 	}
 }
 
