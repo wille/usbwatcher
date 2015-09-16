@@ -104,7 +104,7 @@ void iterate() {
 		mount mount;
 		file >> mount.device >> mount.destination >> mount.fstype >> mount.options >> mount.dump >> mount.pass;
 		if (!mount.device.empty()) {
-			cout << mount.fstype << " device \"" << mount.device << "\", mounted on \"" << mount.destination << "\". Options: " << mount.options << ". Dump:" << mount.dump << " Pass:" << mount.pass << endl;
+			vec.push_back(mount);
 		}
 	}
 #endif
