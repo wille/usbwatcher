@@ -10,6 +10,7 @@
 #	include <unistd.h>
 #endif
 
+#define CONFIG_FILE "usbwatcher.conf"
 #define DELAY 1000
 #define CFG_EXEC "execute:"
 #define CFG_TRIGGER "trigger:"
@@ -66,7 +67,7 @@ int main(int argc, char* argv[]) {
 }
 
 void load_config() {
-	ifstream config("usbwatcher.conf");
+	ifstream config(CONFIG_FILE);
 	string s;
 
 	while (getline(config, s)) {
