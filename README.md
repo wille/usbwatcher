@@ -1,10 +1,5 @@
 # usbwatcher
 
-## Dependencies
-
-- ```boost_system````
-- ```boost_filesystem```
-
 ## Credits
 
 - [redpois0n](https://redpois0n.com)
