@@ -20,6 +20,8 @@
 
 using namespace std;
 
+static vector<string> whitelist;
+
 struct mount {
 #ifdef _WIN32
 	string name;
@@ -49,11 +51,31 @@ struct mount {
 	bool operator!=(const mount& m) {
 		return !this->operator==(m);
 	}
+
+
+	bool is_whitelisted() {
+		for (unsigned int i = 0; i < whitelist.size(); i++) {
+			string w = whitelist[i];
+
+#ifdef _WIN32
+			if (name == w || serial == w) {
+				return true;
+			}
+#elif defined(__APPLE__)
+
+#else
+			if (device == w || destination == w) {
+				return true;*
+			}
+#endif
+		}
+
+		return false;
+	}
 };
 
 static vector<mount> previous;
 static vector<string> commands;
-static vector<string> whitelist;
 static int interval = DELAY;
 static bool first = false;
 
@@ -196,7 +218,7 @@ void compare(vector<mount>& n) {
 			}
 		}
 
-		if (!exists) {
+		if (!exists && !current.is_whitelisted()) {
 			trigger(current.name + " was not here before");
 		}
 	}
