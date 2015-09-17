@@ -87,8 +87,9 @@ void load_config();
 string trim(string);
 
 int main(int argc, char* argv[]) {
-	iterate(true);
 	load_config();
+
+	iterate(true);
 
 	while (true) {
 		sleep();
