@@ -135,7 +135,8 @@ void iterate(bool print) {
 	}
 
 	if (print) {
-		cout << "NAME\t\tSERIAL" << endl;
+		cout << "MOUNT\t\tSERIAL" << endl;
+		cout << "=====\t\t======" << endl;
 	}
 
 	while (*temp) {
