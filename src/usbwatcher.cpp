@@ -24,9 +24,10 @@ struct mount {
 #ifdef _WIN32
 	string name;
 	int type;
+	string serial;
 
 	bool operator==(const mount& m) {
-		return name == m.name && type == m.type;
+		return name == m.name && type == m.type && serial == m.serial;
 	}
 #elif defined(__APPLE__)
 
@@ -116,9 +117,17 @@ void iterate() {
 		case DRIVE_REMOVABLE:
 		case DRIVE_CDROM:
 		case DRIVE_RAMDISK: {
+			DWORD serial = 0;
+			GetVolumeInformation(temp, NULL, 0, &serial, NULL, NULL, NULL, 0);
+
+
+			char text_serial[16];
+			sprintf(text_serial, "%04x-%04x", HIWORD(serial), LOWORD(serial));
+
 			mount m;
 			m.name = string(temp);
 			m.type = type;
+			m.serial = string(text_serial);
 
 			vec.push_back(m);
 			break;
