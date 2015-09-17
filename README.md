@@ -1,5 +1,12 @@
 # usbwatcher
 
+## Arguments
+
+| Argument    		| Description                           |
+| --------    		| -----------                           |
+| --list, -l	   	| Lists blockable devices				|
+| --help, -h		| Prints usage							|
+
 ## Credits
 
 - [redpois0n](https://redpois0n.com)

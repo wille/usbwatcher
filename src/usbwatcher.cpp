@@ -18,6 +18,11 @@
 #define CFG_EXEC "execute:"
 #define CFG_ALLOW "allow:"
 
+#define OPT_LIST "--list"
+#define OPT_LIST_SHORT "-l"
+#define OPT_HELP "--help"
+#define OPT_HELP_SHORT "-h"
+
 using namespace std;
 
 static vector<string> whitelist;
@@ -86,10 +91,24 @@ void trigger(string);
 void load_config();
 string trim(string);
 
-int main(int argc, char* argv[]) {
-	load_config();
+void print_info() {
+	cout << "usbwatcher, Built on: " << __DATE__ << " " << __TIME__ << endl;
+}
 
-	iterate(true);
+int main(int argc, char* argv[]) {
+	for (int i = 0; i < argc; i++) {
+		char* opt = argv[i];
+
+		if (!strcmp(opt, OPT_LIST_SHORT) || !strcmp(opt, OPT_LIST)) {
+			print_info();
+			iterate(true);
+		} else if (!strcmp(opt, OPT_HELP_SHORT) || !strcmp(opt, OPT_HELP)) {
+			print_info();
+			exit(0);
+		}
+	}
+
+	load_config();
 
 	while (true) {
 		sleep();
