@@ -84,6 +84,7 @@ void sleep();
 void compare(vector<mount>&);
 void trigger(string);
 void load_config();
+string trim(string);
 
 int main(int argc, char* argv[]) {
 	iterate(true);
@@ -101,15 +102,15 @@ void load_config() {
 
 	while (getline(config, s)) {
 		if (s.substr(0, strlen(CFG_EXEC)) == CFG_EXEC) {
-			string file = s.substr(strlen(CFG_EXEC));
+			string file = trim(s.substr(strlen(CFG_EXEC)));
 
 			commands.push_back(file);
 		} else if (s.substr(0, strlen(CFG_INTERVAL)) == CFG_INTERVAL) {
-			string i = s.substr(strlen(CFG_INTERVAL));
+			string i = trim(s.substr(strlen(CFG_INTERVAL)));
 
 			interval = atoi(i.c_str());
 		} else if (s.substr(0, strlen(CFG_ALLOW)) == CFG_ALLOW) {
-			string entry = s.substr(strlen(CFG_ALLOW));
+			string entry = trim(s.substr(strlen(CFG_ALLOW)));
 
 			whitelist.push_back(entry);
 		}
@@ -240,4 +241,18 @@ void trigger(string reason) {
 	}
 
 	exit(0);
+}
+
+string trim(string s) {
+	const char* TRIM = "\t\r\n ";
+	int first = s.find_first_not_of(TRIM);
+	int last = s.find_last_not_of(TRIM);
+
+	if (s.length() == 0 || first == -1 || last == -1) {
+		return s;
+	}
+
+	s = s.substr(first, last + 1);
+
+	return s;
 }
