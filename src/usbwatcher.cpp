@@ -57,13 +57,14 @@ static vector<string> whitelist;
 static int interval = DELAY;
 static bool first = false;
 
-void iterate();
+void iterate(bool print = false);
 void sleep();
 void compare(vector<mount>&);
 void trigger(string);
 void load_config();
 
 int main(int argc, char* argv[]) {
+	iterate(true);
 	load_config();
 
 	while (true) {
@@ -93,7 +94,7 @@ void load_config() {
 	}
 }
 
-void iterate() {
+void iterate(bool print) {
 	vector<mount> vec;
 
 #ifdef _WIN32
@@ -107,6 +108,10 @@ void iterate() {
 	if (result == 0) {
 		cerr << "Failed to get drives" << endl;
 		exit(0);
+	}
+
+	if (print) {
+		cout << "NAME\t\tSERIAL" << endl;
 	}
 
 	while (*temp) {
@@ -129,6 +134,11 @@ void iterate() {
 			m.type = type;
 			m.serial = string(text_serial);
 
+			if (print) {
+				cout << temp << "\t\t" << text_serial << endl;
+				break;
+			}
+
 			vec.push_back(m);
 			break;
 		}
@@ -150,6 +160,10 @@ void iterate() {
 		}
 	}
 #endif
+
+	if (print) {
+		return;
+	}
 
 	if (!first) {
 		previous = vec;
