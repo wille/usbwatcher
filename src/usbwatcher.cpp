@@ -52,6 +52,7 @@ struct mount {
 static vector<mount> previous;
 static vector<string> commands;
 static int interval = DELAY;
+static bool first = false;
 
 void iterate();
 void sleep();
@@ -134,6 +135,12 @@ void iterate() {
 		}
 	}
 #endif
+
+	if (!first) {
+		previous = vec;
+		first = true;
+		return;
+	}
 
 	compare(vec);
 }
