@@ -16,6 +16,7 @@
 
 #define CFG_INTERVAL "interval:"
 #define CFG_EXEC "execute:"
+#define CFG_ALLOW "allow:"
 
 using namespace std;
 
@@ -51,6 +52,7 @@ struct mount {
 
 static vector<mount> previous;
 static vector<string> commands;
+static vector<string> whitelist;
 static int interval = DELAY;
 static bool first = false;
 
@@ -82,6 +84,10 @@ void load_config() {
 			string i = s.substr(strlen(CFG_INTERVAL));
 
 			interval = atoi(i.c_str());
+		} else if (s.substr(0, strlen(CFG_ALLOW)) == CFG_ALLOW) {
+			string entry = s.substr(strlen(CFG_ALLOW));
+
+			whitelist.push_back(entry);
 		}
 	}
 }
