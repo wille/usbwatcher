@@ -107,6 +107,10 @@ void print_info() {
 }
 
 int main(int argc, char* argv[]) {
+#if defined(NO_CONSOLE) && defined(_WIN32)
+	ShowWindow(GetConsoleWindow(), SW_HIDE);
+#endif
+
 	for (int i = 0; i < argc; i++) {
 		char* opt = argv[i];
 
