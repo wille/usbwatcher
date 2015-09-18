@@ -106,6 +106,15 @@ void print_info() {
 	cout << "usbwatcher, Built on: " << __DATE__ << " " << __TIME__ << endl;
 }
 
+void print_help() {
+	cout << "Usage: usbwatcher [options]" << endl;
+	cout << "Options:" << endl;
+	cout << "  " << OPT_LIST << ", " << OPT_LIST_SHORT << "\t\t" << "Lists all blockable devices" << endl;
+	cout << "  " << OPT_HELP << ", " << OPT_HELP_SHORT << "\t\t" << "Prints this help" << endl;
+	cout << "  " << OPT_DAEMON << "\t\t" << "Runs as daemon" << endl;
+	cout << "  " << OPT_GENKEY << " [path]\t" << "Generates keyfile" << endl;
+}
+
 int main(int argc, char* argv[]) {
 #if defined(NO_CONSOLE) && defined(_WIN32)
 	ShowWindow(GetConsoleWindow(), SW_HIDE);
@@ -117,8 +126,9 @@ int main(int argc, char* argv[]) {
 		if (!strcmp(opt, OPT_LIST_SHORT) || !strcmp(opt, OPT_LIST)) {
 			print_info();
 			iterate(true);
+			exit(0);
 		} else if (!strcmp(opt, OPT_HELP_SHORT) || !strcmp(opt, OPT_HELP)) {
-			print_info();
+			print_help();
 			exit(0);
 		} else if (!strcmp(opt, OPT_DAEMON)) {
 #ifdef __linux__
