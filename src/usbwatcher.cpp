@@ -2,17 +2,22 @@
 #include <vector>
 #include <fstream>
 #include <cstdlib>
+#include <stdlib.h>
+#include <string>
+#include <sstream>
 
 #ifdef _WIN32
 #	include <windows.h>
 #elif defined(__APPLE__)
 
 #else
+#	include "../../quickd/daemon.h"
 #	include <unistd.h>
 #endif
 
 #define CONFIG_FILE "usbwatcher.conf"
 #define DELAY 1000
+#define KEYFILE_BITS 4096
 
 #define CFG_INTERVAL "interval:"
 #define CFG_EXEC "execute:"
@@ -22,6 +27,8 @@
 #define OPT_LIST_SHORT "-l"
 #define OPT_HELP "--help"
 #define OPT_HELP_SHORT "-h"
+#define OPT_DAEMON "--daemon"
+#define OPT_GENKEY "--genkey"
 
 using namespace std;
 
@@ -39,7 +46,7 @@ struct mount {
 #elif defined(__APPLE__)
 
 #else
-	string device;
+	string name;
 	string destination;
 	string fstype;
 	string options;
@@ -47,7 +54,7 @@ struct mount {
 	int pass;
 
 	bool operator==(const mount& m) {
-		return device == m.device && destination == m.destination
+		return name == m.name && destination == m.destination
 				&& fstype == m.fstype && options == m.options
 				&& dump == m.dump && pass == m.pass;
 	}
@@ -69,8 +76,8 @@ struct mount {
 #elif defined(__APPLE__)
 
 #else
-			if (device == w || destination == w) {
-				return true;*
+			if (name == w || destination == w) {
+				return true;
 			}
 #endif
 		}
@@ -104,6 +111,26 @@ int main(int argc, char* argv[]) {
 			iterate(true);
 		} else if (!strcmp(opt, OPT_HELP_SHORT) || !strcmp(opt, OPT_HELP)) {
 			print_info();
+			exit(0);
+		} else if (!strcmp(opt, OPT_DAEMON)) {
+#ifdef __linux__
+			deploy_daemon();
+#else
+			cerr << "Running as daemon is only supported on Linux!" << endl;
+#endif
+		} else if (!strcmp(opt, OPT_GENKEY)) {
+			ofstream file("keyfile", ios::out | ios::binary);
+
+			srand(time(NULL));
+			for (int i = 0; i < KEYFILE_BITS / 8; i++) {
+				char c = rand();
+				file << c;
+			}
+
+			file.close();
+
+			cout << "Generated " << KEYFILE_BITS << " keyfile" << endl;
+
 			exit(0);
 		}
 	}
@@ -198,8 +225,8 @@ void iterate(bool print) {
 
 	while (!file.eof()) {
 		mount mount;
-		file >> mount.device >> mount.destination >> mount.fstype >> mount.options >> mount.dump >> mount.pass;
-		if (!mount.device.empty()) {
+		file >> mount.name >> mount.destination >> mount.fstype >> mount.options >> mount.dump >> mount.pass;
+		if (!mount.name.empty()) {
 			vec.push_back(mount);
 		}
 	}
