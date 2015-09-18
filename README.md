@@ -4,8 +4,10 @@
 
 | Argument    		| Description                           |
 | --------    		| -----------                           |
-| --list, -l	   	| Lists blockable devices				|
-| --help, -h		| Prints usage							|
+| --list, -l	   	| Lists blockable devices		|
+| --help, -h		| Prints usage				|
+| --daemon		| Run as daemon (Linux)			|
+| --genkey [path]	| Generate keyfile			| 
 
 ## Credits
 
