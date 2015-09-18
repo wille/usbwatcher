@@ -1,5 +1,17 @@
 # usbwatcher
 
+## Features
+
+- Perform selected actions when disallowed USB activity is detected
+- Select which scripts should be ran when triggered or write your own
+- Whitelist USB device by serial, mount point or keyfile
+- Needs ```secure-delete``` installed if you want to securely wipe swap and RAM
+- Change check interval
+
+## Dependencies
+
+- [quickd](https://github.com/redpois0n/quickd)
+
 ## Arguments
 
 | Argument    		| Description                           |
