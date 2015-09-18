@@ -1,4 +1,5 @@
 # TODO
 
 - Implement support for Linux and Mac OS X in that order
-- Run as daemon on Linux
+- Check keyfile once, then ignore reading keyfile each loop
+
