@@ -131,7 +131,10 @@ int main(int argc, char* argv[]) {
 
 			ofstream file(path, ios::out | ios::binary);
 
+#ifndef _WIN32
 			srand(time(NULL));
+#endif
+
 			for (int i = 0; i < KEYFILE_BITS / 8; i++) {
 				char c = rand();
 				file << c;
