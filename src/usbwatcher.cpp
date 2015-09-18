@@ -119,7 +119,13 @@ int main(int argc, char* argv[]) {
 			cerr << "Running as daemon is only supported on Linux!" << endl;
 #endif
 		} else if (!strcmp(opt, OPT_GENKEY)) {
-			ofstream file("keyfile", ios::out | ios::binary);
+			string path = "keyfile";
+
+			if (i + 1 < argc) {
+				path = argv[++i];
+			}
+
+			ofstream file(path, ios::out | ios::binary);
 
 			srand(time(NULL));
 			for (int i = 0; i < KEYFILE_BITS / 8; i++) {
@@ -129,7 +135,7 @@ int main(int argc, char* argv[]) {
 
 			file.close();
 
-			cout << "Generated " << KEYFILE_BITS << " bit keyfile" << endl;
+			cout << "Generated " << KEYFILE_BITS << " bit keyfile to " << path << endl;
 
 			exit(0);
 		}
