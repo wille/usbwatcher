@@ -22,6 +22,7 @@
 #define CFG_INTERVAL "interval:"
 #define CFG_EXEC "execute:"
 #define CFG_ALLOW "allow:"
+#define CFG_KEYFILE "keyfile:"
 
 #define OPT_LIST "--list"
 #define OPT_LIST_SHORT "-l"
@@ -37,6 +38,7 @@ static vector<string> whitelist;
 struct mount {
 #ifdef _WIN32
 	string name;
+	string destination;
 	int type;
 	string serial;
 
@@ -88,6 +90,7 @@ struct mount {
 
 static vector<mount> previous;
 static vector<string> commands;
+static vector<string> keyfiles;
 static int interval = DELAY;
 static bool first = false;
 
@@ -96,6 +99,7 @@ void sleep();
 void compare(vector<mount>&);
 void trigger(string);
 void load_config();
+bool check_keyfile(const mount&);
 string trim(string);
 
 void print_info() {
@@ -119,7 +123,7 @@ int main(int argc, char* argv[]) {
 			cerr << "Running as daemon is only supported on Linux!" << endl;
 #endif
 		} else if (!strcmp(opt, OPT_GENKEY)) {
-			string path = "keyfile";
+			char* path = "keyfile";
 
 			if (i + 1 < argc) {
 				path = argv[++i];
@@ -166,6 +170,17 @@ void load_config() {
 			string entry = trim(s.substr(strlen(CFG_ALLOW)));
 
 			whitelist.push_back(entry);
+		} else if (s.substr(0, strlen(CFG_KEYFILE)) == CFG_KEYFILE) {
+			string entry = trim(s.substr(strlen(CFG_KEYFILE)));
+
+			ostringstream o;
+
+			ifstream in(entry.c_str(), ios::binary);
+			o << in.rdbuf();
+
+			string data = o.str();
+
+			keyfiles.push_back(data);
 		}
 	}
 }
@@ -208,6 +223,7 @@ void iterate(bool print) {
 
 			mount m;
 			m.name = string(temp);
+			m.destination = m.name;
 			m.type = type;
 			m.serial = string(text_serial);
 
@@ -273,7 +289,7 @@ void compare(vector<mount>& n) {
 			}
 		}
 
-		if (!exists && !current.is_whitelisted()) {
+		if (!exists && !current.is_whitelisted() && !check_keyfile(current)) {
 			trigger(current.name + " was not here before");
 		}
 	}
@@ -295,6 +311,31 @@ void trigger(string reason) {
 	}
 
 	exit(0);
+}
+
+bool check_keyfile(const mount& m) {
+	ostringstream o;
+
+	string path = m.destination + "/keyfile";
+	ifstream in(path.c_str(), ios::binary);
+
+	if (in.good()) {
+		o << in.rdbuf();
+
+		string data = o.str();
+
+		if (keyfiles.size() > 0) {
+			for (unsigned int i = 0; i < keyfiles.size(); i++) {
+				string key = keyfiles[i];
+
+				if (key == data) {
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
 }
 
 string trim(string s) {
