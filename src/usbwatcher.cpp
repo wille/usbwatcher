@@ -129,7 +129,7 @@ int main(int argc, char* argv[]) {
 
 			file.close();
 
-			cout << "Generated " << KEYFILE_BITS << " keyfile" << endl;
+			cout << "Generated " << KEYFILE_BITS << " bit keyfile" << endl;
 
 			exit(0);
 		}
