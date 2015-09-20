@@ -50,15 +50,11 @@ struct mount {
 #else
 	string name;
 	string destination;
-	string fstype;
-	string options;
-	int dump;
-	int pass;
+	string serial;
 
 	bool operator==(const mount& m) {
 		return name == m.name && destination == m.destination
-				&& fstype == m.fstype && options == m.options
-				&& dump == m.dump && pass == m.pass;
+				&& serial == m.serial;
 	}
 #endif
 
@@ -260,15 +256,32 @@ void iterate(bool print) {
 	}
 
 #elif defined(__linux__)
-	ifstream file("/proc/mounts");
+	string cmd = "lsusb";
+	string s;
+	FILE *file;
+	char stdbuffer[1024];
+	file = popen(cmd.c_str(), "r");
 
-	while (!file.eof()) {
-		mount mount;
-		file >> mount.name >> mount.destination >> mount.fstype >> mount.options >> mount.dump >> mount.pass;
-		if (!mount.name.empty()) {
-			vec.push_back(mount);
+	while (fgets(stdbuffer, 1024, file) != NULL) {
+		string entry(stdbuffer);
+		entry = trim(entry);
+
+		mount m;
+
+		istringstream s(entry);
+		string dummy;
+		s >> dummy >> dummy >> dummy >> m.name >> dummy >> m.serial;
+
+		m.destination = "Unknown";
+
+		if (print) {
+			cout << m.name << "\t\t" << m.serial << endl;
+		} else {
+			vec.push_back(m);
 		}
 	}
+
+	pclose(file);
 #endif
 
 	if (print) {
