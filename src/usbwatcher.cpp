@@ -18,6 +18,7 @@
 #define CONFIG_FILE "usbwatcher.conf"
 #define DELAY 1000
 #define KEYFILE_BITS 4096
+#define KEYFILE_PATH "/keyfile"
 
 #define CFG_INTERVAL "interval:"
 #define CFG_EXEC "execute:"
@@ -346,7 +347,7 @@ void trigger(string reason) {
 bool check_keyfile(const mount& m) {
 	ostringstream o;
 
-	string path = m.destination + "/keyfile";
+	string path = m.destination + KEYFILE_PATH;
 	ifstream in(path.c_str(), ios::binary);
 
 	if (in.good()) {
