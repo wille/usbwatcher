@@ -20,6 +20,7 @@
 | --help, -h		| Prints usage				|
 | --daemon		| Run as daemon (Linux)			|
 | --genkey [path]	| Generate keyfile			| 
+| --pid [path]		| Write process id to file		|
 
 ## Credits
 
