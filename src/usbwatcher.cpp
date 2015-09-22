@@ -31,6 +31,7 @@
 #define OPT_HELP_SHORT "-h"
 #define OPT_DAEMON "--daemon"
 #define OPT_GENKEY "--genkey"
+#define OPT_PID "--pid"
 
 using namespace std;
 
@@ -110,6 +111,7 @@ void print_help() {
 	cout << "  " << OPT_HELP << ", " << OPT_HELP_SHORT << "\t\t" << "Prints this help" << endl;
 	cout << "  " << OPT_DAEMON << "\t\t" << "Runs as daemon" << endl;
 	cout << "  " << OPT_GENKEY << " [path]\t" << "Generates keyfile" << endl;
+	cout << "  " << OPT_PID << " [path]\t\t" << "Write process id to file" << endl;
 }
 
 int main(int argc, char* argv[]) {
@@ -117,7 +119,7 @@ int main(int argc, char* argv[]) {
 	ShowWindow(GetConsoleWindow(), SW_HIDE);
 #endif
 
-	for (int i = 0; i < argc; i++) {
+	for (int i = 1; i < argc; i++) {
 		char* opt = argv[i];
 
 		if (!strcmp(opt, OPT_LIST_SHORT) || !strcmp(opt, OPT_LIST)) {
@@ -155,6 +157,18 @@ int main(int argc, char* argv[]) {
 
 			cout << "Generated " << KEYFILE_BITS << " bit keyfile to " << path << endl;
 
+			exit(0);
+		} else if (!strcmp(opt, OPT_PID)) {
+			if (i + 1 < argc) {
+				char *path = argv[++i];
+
+				write_pid(path);
+			} else {
+				print_help();
+				exit(0);
+			}
+		} else {
+			cerr << "Invalid option " << opt << endl;
 			exit(0);
 		}
 	}
