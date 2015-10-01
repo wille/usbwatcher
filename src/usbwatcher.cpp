@@ -15,23 +15,7 @@
 #	include <unistd.h>
 #endif
 
-#define CONFIG_FILE "usbwatcher.conf"
-#define DELAY 1000
-#define KEYFILE_BITS 4096
-#define KEYFILE_PATH "/keyfile"
-
-#define CFG_INTERVAL "interval:"
-#define CFG_EXEC "execute:"
-#define CFG_ALLOW "allow:"
-#define CFG_KEYFILE "keyfile:"
-
-#define OPT_LIST "--list"
-#define OPT_LIST_SHORT "-l"
-#define OPT_HELP "--help"
-#define OPT_HELP_SHORT "-h"
-#define OPT_DAEMON "--daemon"
-#define OPT_GENKEY "--genkey"
-#define OPT_PID "--pid"
+#include "config.h"
 
 using namespace std;
 
