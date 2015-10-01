@@ -159,14 +159,17 @@ int main(int argc, char* argv[]) {
 
 			exit(0);
 		} else if (!strcmp(opt, OPT_PID)) {
+#ifdef __linux__
 			if (i + 1 < argc) {
 				char *path = argv[++i];
-
 				write_pid(path);
 			} else {
 				print_help();
 				exit(0);
 			}
+#else
+				cerr << "Writing PID file is only supported on Linux!" << endl;
+#endif
 		} else {
 			cerr << "Invalid option " << opt << endl;
 			exit(0);
